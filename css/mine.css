@@ -3,7 +3,7 @@ header{
     background-color: bisque;
 }
 .header_w{
-        max-width: 1280px;
+    max-width: 1280px;
     width: 100%;
     margin: 0 auto;
 }
@@ -43,4 +43,14 @@ header{
     display: none;
     flex-direction: column;
     gap: 10px;
+}
+.index-main{
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+.section_w{
+    max-width: 1280px;
+    width: 100%;
+    margin: 0 auto;
 }
