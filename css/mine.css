@@ -22,19 +22,20 @@ header{
 .dep_1 .dep_1_item{
     position: relative;
     width: 100%;
+    padding: 15px 0;
+    box-sizing: border-box;
 }
 .dep_1 .dep_1_item > a{
     display: block;
     width: 100%;
-     padding: 15px 0;
 }
 .dep_2{
     position: absolute;
     width: 150px;
-    text-align: center;
-    top: 40px;
+    top: 100%;
     left: 50%;
     transform: translateX(-50%);
+    text-align: center;
     background-color: #fff;
     border: solid 1px #91f50f;
     padding: 15px;
@@ -43,6 +44,7 @@ header{
     display: none;
     flex-direction: column;
     gap: 10px;
+    z-index: 99;
 }
 .index-main{
     display: flex;
@@ -54,3 +56,24 @@ header{
     width: 100%;
     margin: 0 auto;
 }
+
+/* 모달 css */
+.index-sec-1{
+    position: relative;
+}
+.index-sec-1 ._list{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 20px;
+
+}
+.index-sec-1 ._list li{}
+.index-sec-1 ._list li button{
+    box-sizing: border-box;
+}
+.index-sec-1-modal{}
+.index-sec-1-modal ._top{}
+.index-sec-1-modal ._bottom{}
+
+
