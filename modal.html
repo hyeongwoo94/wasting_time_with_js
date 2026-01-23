@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>모달 팝업 테스트</title>
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/mine.css">
+</head>
+<body>
+    <main class="modal-page-main">
+        <div class="modal-page-content">
+            <h1>모달 팝업 테스트 페이지</h1>
+            <p>페이지 로드 후 5초 뒤에 모달이 자동으로 나타납니다.</p>
+        </div>
+    </main>
+
+    <!-- 모달 팝업 -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2></h2>
+                <button type="button" class="modal-close-btn" id="modalCloseBtn">×</button>
+            </div>
+            <div class="modal-body">
+                <p>이것은 자동으로 나타나는 모달 팝업입니다.</p>
+                <p>페이지 로드 후 5초 뒤에 자동으로 표시되었습니다.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-confirm-btn" id="modalConfirmBtn">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="./js/modal.js"></script>
+</body>
+</html>
