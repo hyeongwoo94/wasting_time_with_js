@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/reset.css">
+</head>
+<body>
+    <!-- <h1>api 다뤄보기</h1> -->
+    <section id="se-2">
+        <form>
+            <p class="title"></p>
+            <input type="text" id="title-input" placeholder="title">
+            <button type="button" id="update-btn">변경</button>
+        </form>
+    </section>
+    <script>
+        // DOM 요소 선택 - querySelector로 HTML 요소를 JavaScript 변수에 저장
+        const checkTitle = document.querySelector('#se-2 .title') // p.title 요소 선택
+        const titleInput = document.querySelector('#title-input') // title 입력 필드 선택
+        const updateBtn = document.querySelector('#update-btn') // 변경 버튼 선택
+        
+        // 초기 데이터 로드 함수 - async/await 사용
+        async function loadInitialData() {
+            try {
+                // GET 요청으로 id가 1인 todo 가져오기 (await로 응답 대기)
+                const response = await fetch('https://jsonplaceholder.typicode.com/todos/1')
+                
+                response.headers.forEach((value, key) => {
+                    console.log(`${key}: ${value}`)
+                })
+                
+                // 응답을 JSON 형식으로 파싱 (await로 파싱 완료 대기)
+                // response.json()을 호출하면 body의 내용을 읽어서 JavaScript 객체로 변환
+                const data = await response.json()
+                
+                // 가져온 데이터로 화면 초기화
+                checkTitle.textContent = data.title // p 태그에 title 표시
+            } catch (error) {
+                // 에러 발생 시 콘솔에 출력
+                console.error('오류 발생:', error)
+            }
+        }
+        
+        // 페이지 로드 시 초기 데이터 가져오기
+        loadInitialData()
+        
+        // 변경 버튼 클릭 이벤트 리스너 등록 - async 함수로 선언
+        updateBtn.addEventListener('click', async () => {
+            // 입력 필드에서 값 가져오기 (trim()으로 앞뒤 공백 제거)
+            const newTitle = titleInput.value.trim() // 새로운 title 값 가져오기
+            
+            // 입력값 검증 - 빈 값이면 경고 메시지 표시하고 함수 종료
+            if (!newTitle) {
+                alert('title을 입력해주세요.')
+                return // 함수 실행 중단
+            }
+            
+            try {
+                // PATCH 요청으로 title 업데이트 (항상 id 1번 사용, await로 응답 대기)
+                const response = await fetch('https://jsonplaceholder.typicode.com/todos/1', {
+                    method: 'PATCH', // PATCH 메서드 사용 (부분 업데이트 - 변경할 필드만 전송)
+                    headers: {
+                        'Content-Type': 'application/json', // 서버에 보내는 데이터가 JSON 형식임을 알림
+                    },
+                    body: JSON.stringify({ // JavaScript 객체를 JSON 문자열로 변환하여 전송
+                        title: newTitle // PATCH는 부분 업데이트이므로 변경할 필드(title)만 전송
+                    })
+                })
+                
+                
+                // 서버 응답(JSON)을 JavaScript 객체로 변환 (await로 파싱 완료 대기)
+                // response.json()이 body의 내용을 읽어서 파싱함
+                const data = await response.json()
+                
+                // 업데이트 성공 시 화면 갱신
+                checkTitle.textContent = data.title // p 태그에 업데이트된 title 표시
+                titleInput.value = '' // title 입력 필드 초기화 (비우기)
+            } catch (error) {
+                // 에러 발생 시 처리
+                console.error('오류 발생:', error) // 콘솔에 에러 출력
+                alert('업데이트 중 오류가 발생했습니다.') // 사용자에게 경고 메시지 표시
+            }
+        })
+    </script>
+</body>
+</html>
