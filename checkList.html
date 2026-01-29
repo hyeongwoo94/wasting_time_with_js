@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./css/reset.css">
+</head>
+<body>
+    <section id="sec_1">
+        <h3 class="sec_title">JS</h3>
+        <div class="check-list">
+            <!-- 동적으로 생성될 체크리스트 항목들 -->
+        </div>
+    </section>
+    <br>
+    <br>
+    <section id="sec_2">
+        <h3 class="sec_title">React</h3>
+        <div class="check-list">
+            <!-- 동적으로 생성될 체크리스트 항목들 -->
+        </div>
+    </section>
+    <br>
+    <br>
+    <section id="sec_3">
+        <h3 class="sec_title">React</h3>
+        <div class="check-list">
+            <!-- 동적으로 생성될 체크리스트 항목들 -->
+        </div>
+    </section>
+    <script>
+        const jsData =[
+            {
+                id:'JS0',
+                text: 'var/let/const차이',
+                checked: true
+            },
+            {
+                id:'JS1',
+                text: '원시타입 vs 참조타입',
+                checked: false
+            },
+            {
+                id:'JS2',
+                text: 'this (함수 / 화살표 / 메서드)',
+                checked: true
+            },
+            {
+                id:'JS3',
+                text: '실행 컨텍스트 (아주 개념적으로)',
+                checked: false
+            },
+            {
+                id:'JS4',
+                text: '스코프 / 클로저',
+                checked: false
+            },
+            {
+                id:'JS5',
+                text: '이벤트 루프 (콜스택, 태스크큐)',
+                checked: false
+            },
+            {
+                id:'JS6',
+                text: '비동기 (Promise, async/await)',
+                checked: false
+            },
+            {
+                id:'JS7',
+                text: '배열 메서드 (map/filter/reduce)',
+                checked: false
+            },
+            {
+                id:'JS8',
+                text: '얕은 복사 / 깊은 복사',
+                checked: false
+            },
+        ]
+
+        const reactData = [
+            {
+                id:'RE0',
+                text: '컴포넌트 분리 기준',
+                checked: false
+            },
+            {
+                id:'RE1',
+                text: 'props / state 차이',
+                checked: false
+            },
+            {
+                id:'RE2',
+                text: '단방향 데이터 흐름',
+                checked: true
+            },
+            {
+                id:'RE3',
+                text: '조건부 렌더링',
+                checked: false
+            },
+            {
+                id:'RE4',
+                text: '리스트 렌더링 + key',
+                checked: false
+            },
+            {
+                id:'RE5',
+                text: '이벤트 처리',
+                checked: false
+            },
+            {
+                id:'RE6',
+                text: 'useState',
+                checked: false
+            },
+            {
+                id:'RE7',
+                text: 'useEffect (의존성 배열 설명 가능)',
+                checked: false
+            },
+            {
+                id:'RE8',
+                text: 'useRef',
+                checked: false
+            },
+            {
+                id:'RE9',
+                text: 'useCallback / useMemo (언제 쓰는지)',
+                checked: false
+            },
+            {
+                id:'RE10',
+                text: 'Context API 또는 Zustand',
+                checked: false
+            },
+        ]
+        const apiData = [
+            {
+                id:'ap0',
+                text: 'REST API 개념',
+                checked: false
+            },
+            {
+                id:'ap1',
+                text: 'GET / POST / PUT / DELETE',
+                checked: false
+            },
+            {
+                id:'ap2',
+                text: 'fetch / axios 사용',
+                checked: true
+            },
+            {
+                id:'ap3',
+                text: '에러 처리 (try/catch)',
+                checked: false
+            },
+            {
+                id:'ap4',
+                text: '로딩 / 에러 상태 관리',
+                checked: false
+            },
+        ]
+
+        // 체크리스트 생성 함수 - 재사용 가능하도록 함수로 분리
+        // sectionId: 섹션의 id (예: 'sec_1', 'sec_2')
+        // dataArray: 체크리스트로 만들 데이터 배열
+        function createCheckList(sectionId, dataArray) {
+            // 해당 섹션의 .check-list 요소 선택
+            const checkList = document.querySelector(`#${sectionId} .check-list`)
+
+            // dataArray 배열을 반복하여 체크리스트 항목 동적 생성
+            dataArray.forEach(item => {
+                // 체크리스트 항목 div 생성
+                const listItem = document.createElement('div')
+                listItem.className = 'check-list_item'
+
+                // label 요소 생성
+                const label = document.createElement('label')
+                label.setAttribute('for', item.id)
+
+                // input 체크박스 생성
+                const input = document.createElement('input')
+                input.type = 'checkbox'
+                input.id = item.id
+                input.name = ''
+                
+                // item.checked가 true인지 확인
+                // true이면 input 요소의 checked 속성을 true로 설정하여 체크박스를 체크된 상태로 만듦
+                if (item.checked === true) {
+                    input.checked = true
+                }
+
+                // label에 input과 텍스트 추가
+                label.appendChild(input)
+                label.appendChild(document.createTextNode(item.text))
+
+                // listItem에 label 추가
+                listItem.appendChild(label)
+
+                // check-list에 listItem 추가
+                checkList.appendChild(listItem)
+            })
+        }
+
+        // 함수 호출로 각 섹션의 체크리스트 생성
+        createCheckList('sec_1', jsData)
+        createCheckList('sec_2', reactData)
+        createCheckList('sec_3', apiData)
+    </script>
+</body>
+</html>
