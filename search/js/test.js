@@ -13,6 +13,14 @@
 
 function createListItem(title) {
     // 여기에 코드를 작성하세요
+    const li = document.createElement('li');
+    li.classList.add('_item');
+    const p = document.createElement('p');
+    p.classList.add('_title');
+    p.textContent = title;
+    li.appendChild(p);
+    return li;
+
 }
 
 // renderList(listBoxElement, data) 함수를 작성하세요
@@ -23,6 +31,16 @@ function createListItem(title) {
 
 function renderList(listBoxElement, data) {
     // 여기에 코드를 작성하세요
+    listBoxElement.innerHtml = '';
+    if(data.length === 0){
+        const emptyItem = createListItem('검색결과 없음');
+        listBoxElement.appendChild(emptyItem);
+    }else{
+        data.forEach(item => {
+            const listItem = createListItem(item.title);
+            listBoxElement.appendChild(listItem);
+        });
+    }
 }
 
 // ============================================
@@ -34,6 +52,11 @@ function renderList(listBoxElement, data) {
 
 function validateSearchQuery(query) {
     // 여기에 코드를 작성하세요
+    if(!query || query.trim() === ''){
+        alert('검색어를 입력해주세요.');
+        return false;
+    }
+    return true;
 }
 
 // filterTodosByQuery(data, searchQuery) 함수를 작성하세요
@@ -43,7 +66,11 @@ function validateSearchQuery(query) {
 
 function filterTodosByQuery(data, searchQuery) {
     // 여기에 코드를 작성하세요
+    return data.filter(item =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 }
+
 
 // ============================================
 // result.js 연습 공간
@@ -53,9 +80,18 @@ function filterTodosByQuery(data, searchQuery) {
 // - 가져온 데이터를 renderList()를 사용하여 화면에 표시
 // - 에러 발생 시 console.error로 에러 메시지 출력
 // - 비동기 함수(async/await)로 작성
+const listBox = document.querySelector('.search_list');
+const SearchText = document.querySelector('.search_text');
+const searchBtn = document.querySelector('.search_btn');
 
 async function createListData() {
     // 여기에 코드를 작성하세요
+    try{
+        const data = await fetchTodosData();
+        renderList(listBox, data); 
+    } catch(error){
+        console.log('오류발생', error.message)
+    }
 }
 
 // searchFn() 함수를 작성하세요
@@ -70,4 +106,39 @@ async function createListData() {
 
 async function searchFn() {
     // 여기에 코드를 작성하세요
+    const searchQuery = SearchText.value.trim();
+    if (!validateSearchQuery(searchQuery)) {
+        return;
+    }
+    try{
+        const data = await fetchTodosData();
+        const filteredData = filterTodosByQuery(data, searchQuery);
+        
+        renderList(listBox, filteredData);
+        
+    }catch(error){
+        console.error('오류발생',error.message);
+        alert(error.message);
+
+    }
 }
+// input에 입력값이 있으면 리스트 비우기
+SearchText.addEventListener('input', () => {
+    const inputValue = SearchText.value.trim();
+    if (inputValue) {
+        listBox.innerHTML = ''; // 리스트 아이템 모두 제거
+    }
+});
+
+// 버튼 클릭 이벤트
+searchBtn.addEventListener('click', searchFn);
+
+// Enter 키 입력 시에도 검색 실행
+SearchText.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        searchFn();
+    }
+});
+
+createListData();
