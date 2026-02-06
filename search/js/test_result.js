@@ -34,9 +34,9 @@ function validateSearchQuery(query) {
 
 // 검색 필터 함수 - 검색어로 데이터 필터링
 function filterTodosByQuery(data, searchQuery) {
-    return data.filter(item => 
+    return data.filter(item => {
         item.title.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    })
 }
 // DOM 요소 선택
 const listBox = document.querySelector('.search_list');
