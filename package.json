@@ -3,9 +3,10 @@
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
+    "jsdom": "^23.0.0",
     "prettier": "^3.8.0",
-    "vitest": "^1.0.0",
-    "jsdom": "^23.0.0"
+    "typescript": "^5.9.3",
+    "vitest": "^1.0.0"
   },
   "scripts": {
     "test": "vitest",
