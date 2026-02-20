@@ -49,15 +49,13 @@ function counter() {
 // Promise 직접 구현 & 활용
 
 function myPromise(executor) {
-    let onReslove;
+    let onResolve;
     const resolve = (value) => {
-        setTimeout(() => onReslove(value), 0);
+      setTimeout(() => onResolve(value), 0);
     };
-    this.then = (callback) => {
-        onReslove = callback;
-    };
+    this.then = (callback) => { onResolve = callback; };
     executor(resolve);
-}
+  }
 
 const p = new myPromise((res) => res(123));
 p.then(console.log);
