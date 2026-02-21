@@ -20,7 +20,7 @@ async function originalData() {
     const data = await apiResponse.json();
     return data;
 }
-//fetch는 성공한다면 response를 반환한다.
+// fetch는 네트워크 오류가 없으면 HTTP 에러 상태(404, 500 등)에서도 Response 객체를 반환합니다. response.ok로 성공 여부를 확인해야 합니다.
 // 여기서 apiResponse는 Response 객체야.
 // 이 객체 안에는 이런 정보들이 들어 있어:
 // status → HTTP 상태 코드 (200, 404, 500 등)
