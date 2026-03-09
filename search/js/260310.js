@@ -2,15 +2,13 @@ const API_URL = 'https://jsonplaceholder.typicode.com/todos';
 //비동기함수를 사용하는 이유는 시간이 걸리는 작업을 할때 사용된다.
 
 
-
-
 // 데이터 상태값
-
 
 
 // 데이터 비동기(asyonc)
 // 응답 > 응답받기(fetch) > 응답상태확인(!.response.ok) > json로 객체화 > 데이터 반환
 // 응답 없을시 에러를 throw해줘야 한다.
+
 
 
 //리스트 아이템생성
@@ -22,9 +20,7 @@ const API_URL = 'https://jsonplaceholder.typicode.com/todos';
 // 추가할위치 태그인자받기,데이터받기 > 데이터가 없다면 empty를 아이템에 추가후  아이템생성, 반복문으로 아이템타이틀 넣어서 아이템생성
 
 
-
-// 데이터를 부려줄 부모태그 변수로 변환(.search_list)
-
+// 데이터를 뿌려줄 부모태그 변수로 변환(.search_list)
 
 
 //기본 데이터 뿌려주기(async)
@@ -39,7 +35,9 @@ const API_URL = 'https://jsonplaceholder.typicode.com/todos';
 // 데이터 배열에서 title에 keyword가 포함된 항목만 반환
 // 대소문자 구분을 하지 않기 위해 title과 keyword를 모두 소문자로 변환 후 비교
 // 인자는 데이터와 비교할 키워드
-//filter 사용시 꼭 return 넣기, toLowerCase, includes
+// filter 사용시 꼭 return 넣기, toLowerCase, includes
+// return이 두개다
+
 
 
 // 키워드 입력없이 겁색했을때 alert 보여주고 이함 수를 호출한 함수의 진행 멈추기
@@ -59,5 +57,7 @@ const API_URL = 'https://jsonplaceholder.typicode.com/todos';
 // 키보드 엔터 눌를 시 검색실행함수 실행
 // preventDefault
 
+
 // 검색어 입력 시 리스트 없애기
 
+putData()
