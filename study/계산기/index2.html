@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>퇴직금</title>
+</head>
+<body>
+    
+    <div id="severance-calculator" style="max-width: 500px; margin: 20px auto; padding: 25px; border: 2px solid #2196F3; border-radius: 15px; font-family: 'Nanum Gothic', sans-serif; box-shadow: 0 10px 20px rgba(0,0,0,0.1); background-color: #ffffff; color: #333;">
+    <h2 style="text-align: center; color: #1976D2; margin-top: 0;">💰 2026 퇴직금 세후 계산기</h2>
+    
+    <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: bold;">입사 날짜</label>
+        <input type="date" id="joinDate" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: bold;">퇴사(예정) 날짜</label>
+        <input type="date" id="exitDate" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;">
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: bold;">직전 1년 연봉 (만원)</label>
+        <input type="number" id="annualPay" placeholder="예: 5000" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;">
+    </div>
+
+    <button onclick="calculateSeverance()" style="width: 100%; padding: 15px; background-color: #1976D2; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold;">세후 퇴직금 계산하기</button>
+
+    <div id="sevResult" style="margin-top: 25px; display: none; border-top: 2px dashed #eee; padding-top: 20px;">
+        <div style="background: #f1f8ff; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px;">
+            <span id="workInfo" style="font-weight: bold; color: #1976D2; font-size: 0.95em;"></span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 10px; background: #fafafa; padding: 20px; border-radius: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-weight: bold;">① 예상 퇴직금 (세전)</span>
+                <span id="preTax" style="color: #333; font-weight: bold;"></span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; color: #d32f2f; font-size: 0.9em;">
+                <span>② 예상 소득세+지방세 (-)</span>
+                <span id="taxAmount"></span>
+            </div>
+            <hr style="border: 0.5px solid #eee; width: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 1.1em; font-weight: bold; color: #2e7d32;">③ 예상 실수령액 (세후)</span>
+                <span id="postTax" style="font-size: 1.3em; font-weight: bold; color: #2e7d32;"></span>
+            </div>
+        </div>
+        
+        <p style="font-size: 0.75em; color: #999; margin-top: 15px; text-align: center;">
+            * 퇴직소득세는 근속연수공제 등을 적용한 추정치입니다.<br>
+            * 실제 수령액은 정확한 연차수당 및 상여금에 따라 차이가 있습니다.
+        </p>
+    </div>
+</div>
+
+<script>
+function calculateSeverance() {
+    const joinDate = new Date(document.getElementById('joinDate').value);
+    const exitDate = new Date(document.getElementById('exitDate').value);
+    const annualPay = document.getElementById('annualPay').value;
+
+    if(!joinDate || !exitDate || !annualPay || annualPay <= 0) {
+        alert('모든 항목을 정확히 입력해 주세요!');
+        return;
+    }
+
+    const diffDays = Math.ceil(Math.abs(exitDate - joinDate) / (1000 * 60 * 60 * 24));
+    const years = Math.floor(diffDays / 365);
+
+    // 1년 미만 체크
+    if (diffDays < 365) {
+        alert('근속기간이 1년 미만인 경우 퇴직금 지급 대상이 아닙니다.');
+        document.getElementById('sevResult').style.display = 'none';
+        return;
+    }
+
+    // 퇴직금 산출 (세전)
+    const monthlyPay = (annualPay * 10000) / 12;
+    const preTaxAmount = (monthlyPay * diffDays) / 365;
+
+    // 퇴직소득세 간이 계산 (2026년 기준 근속연수 공제 및 세율 적용 시뮬레이션)
+    // 연수분할 계산을 간략화한 실무형 로직
+    let taxBase = preTaxAmount;
+    
+    // 근속연수공제 (대략적 평균치 적용)
+    let deduction = 0;
+    if (years <= 5) deduction = years * 1000000;
+    else if (years <= 10) deduction = 5000000 + (years - 5) * 2000000;
+    else deduction = 15000000 + (years - 10) * 2500000;
+    
+    taxBase = Math.max(0, taxBase - deduction);
+    
+    // 실효세율 적용 (퇴직소득은 분류과세로 일반 소득세보다 낮음)
+    let effectiveTaxRate = 0.03; // 기본 3% 시작
+    if (preTaxAmount > 100000000) effectiveTaxRate = 0.12;
+    else if (preTaxAmount > 50000000) effectiveTaxRate = 0.08;
+    else if (preTaxAmount > 30000000) effectiveTaxRate = 0.05;
+
+    const incomeTax = taxBase * effectiveTaxRate;
+    const localTax = incomeTax * 0.1;
+    const totalTax = incomeTax + localTax;
+    const postTaxAmount = preTaxAmount - totalTax;
+
+    // 결과 출력
+    document.getElementById('workInfo').innerText = `총 근속기간: ${diffDays.toLocaleString()}일 (약 ${years}년)`;
+    document.getElementById('preTax').innerText = Math.round(preTaxAmount).toLocaleString() + '원';
+    document.getElementById('taxAmount').innerText = '-' + Math.round(totalTax).toLocaleString() + '원';
+    document.getElementById('postTax').innerText = Math.round(postTaxAmount).toLocaleString() + '원';
+    document.getElementById('sevResult').style.display = 'block';
+}
+</script>
+</body>
+</html>

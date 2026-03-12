@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>실수령액</title>
+</head>
+<body>
+<div id="salary-calculator-2026" style="max-width: 480px; margin: 20px auto; padding: 25px; border: 2px solid #4CAF50; border-radius: 15px; font-family: 'Nanum Gothic', sans-serif; box-shadow: 0 10px 20px rgba(0,0,0,0.1); background-color: #ffffff;">
+    <h2 style="text-align: center; color: #2e7d32; margin-top: 0;">📅 2026년 연봉 실수령액 계산기</h2>
+    <p style="font-size: 0.85em; color: #888; text-align: center; margin-bottom: 20px;">*2026년 연금개혁 및 인상된 4대보험 요율 적용 완료</p>
+    
+    <div style="margin-bottom: 20px;">
+        <label style="display: block; margin-bottom: 8px; font-weight: bold; color: #333;">연봉 입력 (단위: 만원)</label>
+        <input type="number" id="annualSalary" placeholder="예: 4500" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; font-size: 16px;">
+    </div>
+
+    <button onclick="calculate2026()" style="width: 100%; padding: 15px; background-color: #4CAF50; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold; transition: 0.3s;">내 실수령액 확인하기</button>
+
+    <div id="result" style="margin-top: 25px; display: none; border-top: 2px dashed #eee; padding-top: 20px;">
+        <div style="text-align: center; margin-bottom: 20px;">
+            <span style="font-size: 1em; color: #666;">월 예상 실수령액</span><br>
+            <span style="font-size: 2em; font-weight: bold; color: #d32f2f;" id="monthlyNet"></span>
+        </div>
+        
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; font-size: 0.95em; color: #444; line-height: 2;">
+            <div style="display: flex; justify-content: space-between;"><span>국민연금 (4.75% 🟢인상)</span> <span id="pension" style="font-weight: bold;"></span></div>
+            <div style="display: flex; justify-content: space-between;"><span>건강보험 (3.595% 🔺인상)</span> <span id="health" style="font-weight: bold;"></span></div>
+            <div style="display: flex; justify-content: space-between;"><span>장기요양 (건보의 13.14%)</span> <span id="care" style="font-weight: bold;"></span></div>
+            <div style="display: flex; justify-content: space-between;"><span>고용보험 (0.9%)</span> <span id="emp" style="font-weight: bold;"></span></div>
+            <div style="display: flex; justify-content: space-between;"><span>소득세/지방소득세</span> <span id="tax" style="font-weight: bold;"></span></div>
+        </div>
+        <p style="font-size: 0.75em; color: #999; margin-top: 10px;">*식대 비과세 20만원 및 부양가족 1인 기준 추정치입니다.</p>
+    </div>
+</div>
+
+<script>
+function calculate2026() {
+    const salaryInput = document.getElementById('annualSalary').value;
+    if(!salaryInput || salaryInput <= 0) { alert('연봉을 입력해주세요!'); return; }
+
+    const annual = salaryInput * 10000;
+    const monthlyGross = annual / 12;
+    const nonTaxable = 200000; // 식대 비과세 20만원
+    const targetAmount = monthlyGross - nonTaxable;
+
+    // --- 2026년 확정 요율 적용 ---
+    // 1. 국민연금: 9% -> 9.5% (근로자 4.75%)
+    const pension = Math.min(targetAmount * 0.0475, 302575); // 2026년 상한액 근사치
+    
+    // 2. 건강보험: 7.09% -> 7.19% (근로자 3.595%)
+    const health = targetAmount * 0.03595;
+    
+    // 3. 장기요양보험: 건강보험료의 13.14% (인상분 반영)
+    const care = health * 0.1314;
+    
+    // 4. 고용보험: 0.9% (동결)
+    const employment = targetAmount * 0.009;
+    
+    // 5. 근로소득세 (간이세액표 기반 간략 산식)
+    let incomeTax = 0;
+    if (annual <= 30000000) incomeTax = targetAmount * 0.012;
+    else if (annual <= 50000000) incomeTax = targetAmount * 0.035;
+    else if (annual <= 80000000) incomeTax = targetAmount * 0.06;
+    else incomeTax = targetAmount * 0.12;
+    
+    const localTax = incomeTax * 0.1;
+
+    const totalDeduction = pension + health + care + employment + incomeTax + localTax;
+    const netPay = monthlyGross - totalDeduction;
+
+    // 결과 출력
+    document.getElementById('pension').innerText = '-' + Math.round(pension).toLocaleString() + '원';
+    document.getElementById('health').innerText = '-' + Math.round(health).toLocaleString() + '원';
+    document.getElementById('care').innerText = '-' + Math.round(care).toLocaleString() + '원';
+    document.getElementById('emp').innerText = '-' + Math.round(employment).toLocaleString() + '원';
+    document.getElementById('tax').innerText = '-' + Math.round(incomeTax + localTax).toLocaleString() + '원';
+    document.getElementById('monthlyNet').innerText = Math.round(netPay).toLocaleString() + '원';
+    document.getElementById('result').style.display = 'block';
+}
+</script>
+</body>
+</html>

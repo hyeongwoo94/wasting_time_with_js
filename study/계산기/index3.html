@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        피보험 단위기간 180일: 본문에 "단순히 6개월 근무가 아니라, 유급 휴일(일요일 등)을 포함해 실제 보수를 받은 날이 180일이 넘어야 합니다"라고 강조해 주세요.
+
+하한액 인상: 2026년 최저임금 결정에 따라 실업급여 하한액도 연동되어 오릅니다. 위 코드에는 2026년 예상 최저임금 기준의 하한액을 적용했습니다.
+
+자진퇴사 예외: "원칙적으로 자진퇴사는 안 되지만, 임금체불이나 괴롭힘 등 특정 사유가 있으면 가능할 수도 있다"는 내용을 덧붙이면 체류 시간이 늘어납니다.
+    </div>
+    <div id="u-calc-v2" style="max-width: 500px; margin: 20px auto; padding: 25px; border: 2px solid #FF9800; border-radius: 15px; font-family: 'Nanum Gothic', sans-serif; box-shadow: 0 10px 20px rgba(0,0,0,0.1); background-color: #ffffff; color: #333;">
+    <h2 style="text-align: center; color: #E65100; margin-top: 0;">📋 2026 실업급여 자격진단 & 계산</h2>
+    
+    <div style="background: #FFF3E0; padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.9em;">
+        <strong style="display: block; margin-bottom: 10px; color: #E65100;">⚠️ 먼저 수급 자격을 확인하세요!</strong>
+        <label style="display: block; margin-bottom: 8px;"><input type="checkbox" id="cond1"> 퇴사 전 18개월간 <b>고용보험 가입 180일 이상</b> (무급휴일 제외 실 근로일수 기준)</label>
+        <label style="display: block; margin-bottom: 8px;"><input type="checkbox" id="cond2"> <b>비자발적 퇴사</b> (권고사직, 계약만료, 정년퇴직 등)</label>
+        <label style="display: block; margin-bottom: 5px;"><input type="checkbox" id="cond3"> 재취업을 위한 <b>적극적인 노력과 의지</b>가 있음</label>
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: bold;">퇴사 당시 만 나이</label>
+        <input type="number" id="age" placeholder="예: 35" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;">
+    </div>
+
+    <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: bold;">총 고용보험 가입기간 (년 단위)</label>
+        <select id="insuranceYear" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px;">
+            <option value="1">1년 미만</option>
+            <option value="3">1년 이상 ~ 3년 미만</option>
+            <option value="5">3년 이상 ~ 5년 미만</option>
+            <option value="10">5년 이상 ~ 10년 미만</option>
+            <option value="11">10년 이상</option>
+        </select>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label style="display: block; margin-bottom: 5px; font-weight: bold;">퇴사 전 3개월 평균 월급 (만원)</label>
+        <input type="number" id="avgWage" placeholder="예: 400" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box;">
+    </div>
+
+    <button onclick="calculateUI2026()" style="width: 100%; padding: 15px; background-color: #FF9800; color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 18px; font-weight: bold;">내 수급 가능액 확인</button>
+
+    <div id="uiResult" style="margin-top: 25px; display: none; border-top: 2px dashed #eee; padding-top: 20px;">
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 15px;">
+            <p style="margin: 0; color: #666;">예상 수급기간: <span id="duration" style="font-weight: bold; color: #E65100;"></span></p>
+            <p style="margin: 5px 0 0; font-size: 1.2em; font-weight: bold;" id="totalAmount"></p>
+        </div>
+        <p style="font-size: 0.75em; color: #999; line-height: 1.5;">* 2026년 최저임금 인상에 따른 하한액(1일 64,192원 가정)을 반영한 결과입니다. 정확한 금액은 고용센터 방문 상담이 필요합니다.</p>
+    </div>
+</div>
+
+<script>
+function calculateUI2026() {
+    // 조건 체크 확인
+    if(!document.getElementById('cond1').checked || !document.getElementById('cond2').checked || !document.getElementById('cond3').checked) {
+        alert('모든 수급 자격 조건에 해당해야 실업급여 신청이 가능합니다.\n체크박스를 확인해 주세요.');
+        return;
+    }
+
+    const age = parseInt(document.getElementById('age').value);
+    const years = parseInt(document.getElementById('insuranceYear').value);
+    const wage = parseInt(document.getElementById('avgWage').value) * 10000;
+
+    if(!age || !wage) { alert('나이와 평균 월급을 입력해 주세요!'); return; }
+
+    // 1. 수급 기간 산출 (2026 기준)
+    let duration = 0;
+    if (age < 50) {
+        if (years < 1) duration = 120;
+        else if (years < 3) duration = 150;
+        else if (years < 5) duration = 180;
+        else if (years < 10) duration = 210;
+        else duration = 240;
+    } else {
+        if (years < 1) duration = 120;
+        else if (years < 3) duration = 180;
+        else if (years < 5) duration = 210;
+        else if (years < 10) duration = 240;
+        else duration = 270;
+    }
+
+    // 2. 급여액 계산
+    let daily = (wage / 30) * 0.6;
+    const maxDaily = 66000; // 상한액
+    const minDaily = 64192; // 2026 예상 하한액 (최저임금 연동)
+
+    if (daily > maxDaily) daily = maxDaily;
+    if (daily < minDaily) daily = minDaily;
+
+    const total = daily * duration;
+
+    document.getElementById('duration').innerText = duration + '일';
+    document.getElementById('totalAmount').innerText = '총 예상 수급액: ' + Math.round(total).toLocaleString() + '원';
+    document.getElementById('uiResult').style.display = 'block';
+}
+</script>
+</body>
+</html>
