@@ -1,0 +1,16 @@
+.todo-section {
+    padding: 15px;
+    box-sizing: border-box;
+}
+.todo-list {
+    list-style: none;
+    padding: 0;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+.todo-item {
+    display: flex;
+    justify-content: space-between;
+}
